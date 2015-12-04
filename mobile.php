@@ -10,9 +10,9 @@
 //----------------------------------
 
 
-function getLocationByMobile($mobile="18665746639")
+function getLocationByMobile($mobile)
 {
-	$apiurl = 'http://apis.juhe.cn/mobile/get';
+	$apiurl = 'http://apis.juhe.cn/mobile/post';
 	$params = array(
 	  'key' => 'b4b88a8ffc09e2fd3f24251ee19fa168', 	//您申请的手机号码归属地查询接口的appkey
 	  'phone' => $mobile 							//要查询的手机号码
@@ -23,12 +23,13 @@ function getLocationByMobile($mobile="18665746639")
 	$content = @file_get_contents($apiurl.'?'.$paramsString);
 	$result = json_decode($content,true);
 	if($result['error_code'] == '0'){
-		$res['location']	= $result['result']['province'].$result['result']['city'];
-	   	return json_encode($res);
+		$res['location']	= $result['result']['city'].'市';
+	   	return $res;
 	}else{
-	    return $result['reason']."(".$result['error_code'].")";
+	    return array();
 	}
 
 }
 
-var_dump(getLocationByMobile());
+$mobile = isset($_REQUEST['mobile']) ? $_REQUEST['mobile'] : '18665746640';
+return  getLocationByMobile($mobile);
